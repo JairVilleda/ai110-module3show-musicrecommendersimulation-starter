@@ -23,11 +23,48 @@ Some prompts to answer:
 
 - What features does each `Song` use in your system
   - For example: genre, mood, energy, tempo
+Each song will use genre, energy, and acousticness and NOW MOOD
 - What information does your `UserProfile` store
 - How does your `Recommender` compute a score for each song
+similarity = 1 - |user_preference - song_value|
+genre_score = 1  if song.genre == user.preferred_genre
+  genre_score = 0  if not
+genre weight = 0.40
+energy weight = 0.35
+acousticness = 0.25
 - How do you choose which songs to recommend
 
 You can include a simple diagram or bullet list if helpful.
+---
+Real-world recommendations systems like Spotify and Youtube predict what users will like by analyzing patterns in user behavior and content features. They usually combine collaborative filtering (which learns from what similar users like) and content-based filtering (which recommends items similar to what a user has already interacted with). In large-scale systems, this data is continously updated using signals like skips, likes, and watch time. These systems also use detailed content attributes such as genre, tempo, and mood. At a high level, recommendation systems take input data (user behavior + song attributes), compare it against user preferences or learned user embeddings, and then produce a ranked list of items based on predicted revelance.
+
+This simulation will prioritize content-based filtering. Each SONG is represented by a small set of features and each USER has a defined taste profile. The systems compares song features to user preferences and assigns a similiarity score to rank songs.
+Song Features (Song Object):
+- Genre (categorical)
+- energy (float): representing intensity/vibe
+- acousticness (float): representing how acoustic vs electronic the sound is
+User Profile (UserProfile object):
+- preferred_genre (string)
+- preferred_energy (float)
+- preferred_acousticness (float)
+
+---
+# Algorithm Recipe
+Each song is scored using the following rules:
+- +2.0 points if the genre matches the user’s favorite genre
+- +1.0 point if the mood matches the user’s favorite mood
+- Energy similarity = 1 − |song.energy − user.target_energy|
+- Acousticness similarity = 1 − |song.acousticness − user.target_acousticness|
+Final score:
+- score = genre_score + mood_score + energy_similarity + acousticness_similarity
+After scoring all songs, they are sorted from highest to lowest score, and the top 5 songs are recommended.
+
+# Potential Biases
+- Genre has the highest weight so songs outside the user’s preferred genre may be ranked lower even if they match well in other features
+- Genre and mood together contribute more points than energy and acousticness, which can cause songs with weaker “vibe” matches to rank higher
+- Genre and mood use exact matching, so similar categories like R&B vs soul are treated as completely different
+- Energy and acousticness are weighted equally, even though different users may care more about one than the other
+- Recommendations will often be dominated by songs that match the user’s preferred genre, leaving little room for out-of-genre songs. This means the system reinforces existing preferences but is less effective at helping users discover new music outside their comfort zone.
 
 ---
 

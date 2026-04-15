@@ -9,3 +9,13 @@ id,title,artist,genre,mood,energy,tempo_bpm,valence,danceability,acousticness
 8,Night Drive Loop,Neon Echo,synthwave,moody,0.75,110,0.49,0.73,0.22
 9,Focus Flow,LoRoom,lofi,focused,0.40,80,0.59,0.60,0.78
 10,Rooftop Lights,Indigo Parade,indie pop,happy,0.76,124,0.81,0.82,0.35
+11,Block Party Anthem,DJ Cortex,hip-hop,energetic,0.88,96,0.72,0.91,0.08
+12,Moonlight Sonata Reborn,Clara Voss,classical,melancholic,0.22,58,0.28,0.18,0.97
+13,Late Night Feelings,Jade Monroe,r&b,romantic,0.58,88,0.74,0.68,0.42
+14,Dirt Road Summer,The Pines,country,nostalgic,0.64,100,0.76,0.70,0.73
+15,Fury Engine,Iron Cascade,metal,angry,0.97,168,0.31,0.55,0.04
+16,Rave Universe,Synthex,electronic,euphoric,0.94,138,0.88,0.95,0.03
+17,Delta Crossroads,Muddy Steps,blues,sad,0.45,76,0.35,0.42,0.81
+18,Island Sunrise,Rootz & Waves,reggae,uplifting,0.67,86,0.83,0.78,0.55
+19,Campfire Confessions,Wren & River,folk,nostalgic,0.38,70,0.68,0.47,0.94
+20,Velvet Soul,Amara James,soul,romantic,0.55,92,0.79,0.65,0.58
