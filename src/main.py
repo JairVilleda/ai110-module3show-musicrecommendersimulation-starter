@@ -13,27 +13,78 @@ from recommender import load_songs, recommend_songs
 
 
 def main() -> None:
-    songs = load_songs("data/songs.csv") 
+    songs = load_songs("data/songs.csv")
 
-    # Starter example profile
-    user_prefs = {"genre": "pop", "mood": "happy", "energy": 0.8}
+    profiles = [
+        {
+            "name": "High-Energy Pop",
+            "genre": "pop",
+            "mood": "happy",
+            "energy": 0.85,
+            "target_acousticness": 0.15
+        },
+        {
+            "name": "Chill Lofi",
+            "genre": "lofi",
+            "mood": "chill",
+            "energy": 0.38,
+            "target_acousticness": 0.80
+        },
+        {
+            "name": "High Energy Sad (Adversarial)",
+            "genre": "blues",
+            "mood": "sad",
+            "energy": 0.95,
+            "target_acousticness": 0.10
+        },
+        {
+            "name": "Classical Conflict (Impossible Combo)",
+            "genre": "classical",
+            "mood": "energetic",
+            "energy": 0.90,
+            "target_acousticness": 0.10
+        },
+        {
+            "name": "Extreme Low (0.0 Values)",
+            "genre": "metal",
+            "mood": "angry",
+            "energy": 0.0,
+            "target_acousticness": 0.0
+        },
+        {
+            "name": "Extreme High (1.0 Values)",
+            "genre": "electronic",
+            "mood": "euphoric",
+            "energy": 1.0,
+            "target_acousticness": 1.0
+        },
+        {
+            "name": "Case Sensitivity Test",
+            "genre": "Pop",
+            "mood": "Happy",
+            "energy": 0.85,
+            "target_acousticness": 0.15
+        },
+        {
+            "name": "Balanced Neutral Test",
+            "genre": "jazz",
+            "mood": "melancholic",
+            "energy": 0.5,
+            "target_acousticness": 0.5
+        }
+    ]
 
-    recommendations = recommend_songs(user_prefs, songs, k=5)
+    for p in profiles:
+        print("\n" + "=" * 40)
+        print("PROFILE:", p["name"])
+        print("=" * 40)
 
-    print("\n" + "=" * 40)
-    print("  Top Recommendations")
-    print("=" * 40)
+        recs = recommend_songs(p, songs, k=5)
 
-    MAX_SCORE = 5.0
-
-    for i, (song, score, explanation) in enumerate(recommendations, start=1):
-        pct = (score / MAX_SCORE) * 100
-        print(f"\n#{i}: {song['title']} by {song['artist']}")
-        print(f"    Score: {score:.2f} / {MAX_SCORE:.1f}  ({pct:.0f}%)")
-        print("    Reasons:")
-        for reason in explanation.split(", "):
-            print(f"      - {reason}")
-        print("-" * 40)
+        for song, score, explanation in recs:
+            print(f"{song['title']} - {score:.2f}")
+            print(explanation)
+            print()
 
 
 if __name__ == "__main__":

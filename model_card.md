@@ -70,6 +70,8 @@ Prompts:
 - Cases where the system overfits to one preference  
 - Ways the scoring might unintentionally favor some users  
 
+This recommender system tends to over-prioritize genre, which can create a filter bubble where users are repeatedly shown songs from the same genre and rarely exposed to new styles. Because genre and mood contribute a large portion of the total score, songs that match these categories can rank highly even if their energy or acousticness differs significantly from the user’s preferences. Additionally, the dataset is relatively small, which limits diversity and can cause the same songs to appear frequently across different user profiles.
+
 ---
 
 ## 7. Evaluation  
@@ -85,6 +87,7 @@ Prompts:
 
 No need for numeric metrics unless you created some.
 
+I tested the recommender using several profiles, including normal cases (High-Energy Pop, Chill Lofi) and edge cases like conflicting preferences, extreme values (0.0 and 1.0), and case mismatches ("Pop" vs "pop"). I checked whether the top recommendations matched the intended preferences and felt reasonable. I found that genre and mood matches often dominated the ranking, even when energy or acousticness did not align well. For example, a blues song ranked first for a high-energy profile mainly due to category matches. Case sensitivity also caused expected matches to fail completely. After adjusting the weights, the system became more balanced, and songs with better energy and acousticness alignment ranked higher. This showed that the recommendations are highly sensitive to how features are weighted.
 ---
 
 ## 8. Future Work  

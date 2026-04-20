@@ -2,39 +2,30 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
-
-Your goal is to:
-
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
+This project builds a simple content-based music recommender system. It represents songs using features like genre, mood, energy, and acousticness, and compares them to a user’s preferences. Each song is given a score based on how well it matches the user’s taste, and the top-ranked songs are recommended. The goal is to understand how basic scoring rules can simulate real-world recommendation systems and to analyze their strengths and limitations.
 
 ---
 
 ## How The System Works
 
-Explain your design in plain language.
+Each song is represented using a few key features: genre, mood, energy, and acousticness.
 
-Some prompts to answer:
+The user profile stores preferences for:
+- favorite genre
+- favorite mood
+- target energy level
+- target acousticness
 
-- What features does each `Song` use in your system
-  - For example: genre, mood, energy, tempo
-Each song will use genre, energy, and acousticness and NOW MOOD
-- What information does your `UserProfile` store
-- How does your `Recommender` compute a score for each song
-similarity = 1 - |user_preference - song_value|
-genre_score = 1  if song.genre == user.preferred_genre
-  genre_score = 0  if not
-genre weight = 0.40
-energy weight = 0.35
-acousticness = 0.25
-- How do you choose which songs to recommend
+The recommender compares each song to the user’s preferences and assigns a score.
 
-You can include a simple diagram or bullet list if helpful.
+- If the genre matches, the song gets +2.0 points  
+- If the mood matches, the song gets +1.0 point  
+- Energy similarity is calculated as:  
+  similarity = 1 − |song.energy − user.target_energy|  
+- Acousticness similarity is calculated the same way  
+
+The final score is the sum of all these values. After scoring every song, the system sorts them from highest to lowest score and returns the top 5 recommendations.
+
 ---
 Real-world recommendations systems like Spotify and Youtube predict what users will like by analyzing patterns in user behavior and content features. They usually combine collaborative filtering (which learns from what similar users like) and content-based filtering (which recommends items similar to what a user has already interacted with). In large-scale systems, this data is continously updated using signals like skips, likes, and watch time. These systems also use detailed content attributes such as genre, tempo, and mood. At a high level, recommendation systems take input data (user behavior + song attributes), compare it against user preferences or learned user embeddings, and then produce a ranked list of items based on predicted revelance.
 
@@ -65,6 +56,37 @@ After scoring all songs, they are sorted from highest to lowest score, and the t
 - Genre and mood use exact matching, so similar categories like R&B vs soul are treated as completely different
 - Energy and acousticness are weighted equally, even though different users may care more about one than the other
 - Recommendations will often be dominated by songs that match the user’s preferred genre, leaving little room for out-of-genre songs. This means the system reinforces existing preferences but is less effective at helping users discover new music outside their comfort zone.
+
+---
+![Terminal screenshot of main.py](screenshots/main%20output.png)
+
+
+---
+![Recommendations screenshot 1](screenshots/recommendations1.png)
+![Recommendations screenshot 2](screenshots/recommendations2.png)
+![Recommendations screenshot 3](screenshots/recommendations3.png)
+
+---
+### Profile Comparisons
+
+**High-Energy Pop vs Chill Lofi**  
+The High-Energy Pop profile recommends upbeat, energetic songs like "Gym Hero" because the user wants high energy and low acousticness. In contrast, the Chill Lofi profile shifts toward slower, more relaxed songs like "Library Rain" that have lower energy and higher acousticness. This makes sense because the two profiles are looking for completely different vibes.
+
+**High-Energy Pop vs High Energy Sad (Adversarial)**  
+Both profiles prefer high-energy songs, but the High Energy Sad profile ranks "Delta Crossroads" first because it matches the genre and mood (blues + sad), even though its energy is much lower than requested. This shows that genre and mood can outweigh energy, which is why a less energetic song still ranks first.
+
+**Chill Lofi vs Extreme Low (0.0 Values)**  
+Both profiles prefer lower energy, but the Extreme Low profile strongly favors "Fury Engine" because it matches genre and mood, even though it has very high energy. This happens because the system gives a lot of points for genre and mood, even when the actual sound of the song doesn’t match the user’s preference.
+
+**Extreme Low vs Extreme High**  
+The Extreme Low profile (energy = 0.0) and Extreme High profile (energy = 1.0) produce very different results. Low energy preferences push toward calm songs, while high energy preferences bring up intense songs like "Rave Universe." However, both profiles still prioritize genre and mood heavily, which can lead to unexpected top results.
+
+**High-Energy Pop vs Case Sensitivity Test**  
+These profiles are meant to be the same, but the Case Sensitivity profile performs worse because "Pop" and "Happy" don’t match "pop" and "happy" in the dataset. As a result, songs like "Gym Hero" lose their genre and mood bonus and only score based on energy and acousticness, lowering their rank.
+
+**Balanced Neutral vs High-Energy Pop**  
+The Balanced Neutral profile (energy = 0.5, acousticness = 0.5) produces more mixed results, while High-Energy Pop consistently favors energetic pop songs. This shows that even “neutral” settings still act like a preference for mid-range songs rather than no preference at all.
+
 
 ---
 
@@ -105,39 +127,26 @@ You can add more tests in `tests/test_recommender.py`.
 
 ## Experiments You Tried
 
-Use this section to document the experiments you ran. For example:
-
-- What happened when you changed the weight on genre from 2.0 to 0.5
-- What happened when you added tempo or valence to the score
-- How did your system behave for different types of users
+- I reduced the weight of genre and mood to make energy and acousticness more important. This made recommendations more balanced and less dominated by genre.
+- I tested edge cases like extreme values (0.0 and 1.0) and conflicting preferences (high energy + sad mood) to see how the system behaves.
+- I tested case sensitivity (e.g., "Pop" vs "pop") and found that mismatches caused the system to ignore genre and mood completely.
 
 ---
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
+- The system uses a very small dataset, so recommendations lack diversity.
+- It relies on exact matching for genre and mood, which can cause incorrect results due to formatting differences.
+- Genre and mood are weighted heavily, which can override better matches in energy or acousticness.
+- It does not consider other important features like lyrics, artist similarity, or user listening history.
 
 ---
 
 ## Reflection
 
-Read and complete `model_card.md`:
+This project showed me how recommendation systems turn simple data into meaningful suggestions. Even with a basic scoring formula, the system was able to produce recommendations that felt accurate in many cases. However, I also learned how sensitive these systems are to small design choices. Changing weights or input formatting could completely change the results, which highlights how important tuning and data quality are.
 
-[**Model Card**](model_card.md)
-
-Write 1 to 2 paragraphs here about what you learned:
-
-- about how recommenders turn data into predictions
-- about where bias or unfairness could show up in systems like this
-
+One surprising insight was how easily bias can appear. The system often over-prioritized genre, creating a “filter bubble” where users kept seeing the same type of music. This made me realize that real-world recommendation systems must carefully balance accuracy with diversity. Overall, this project helped me understand that even simple algorithms can feel intelligent, but they require thoughtful design to avoid unintended behavior.
 
 ---
 
